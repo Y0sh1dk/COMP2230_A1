@@ -34,6 +34,14 @@ public class Cell {
         return this.type;
     }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "Cell{" +
