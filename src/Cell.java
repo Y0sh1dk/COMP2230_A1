@@ -1,13 +1,14 @@
 public class Cell {
     private Type type;
     private Status status;
+    private int cellNum;
 
     public Cell() {
         this.type = null;
         this.status = null;
     }
 
-    public Cell(Type inType, Status inStatus) {
+    public Cell(Type inType, Status inStatus, int cellNum) {
         this();
         this.type = inType;
         this.status = inStatus;
