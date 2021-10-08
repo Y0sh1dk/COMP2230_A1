@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -33,8 +35,12 @@ public class MazeGenerator {
         System.out.println("\n-------------CELL WALLS-------------");
         this.printMazeWalls(m);
         System.out.println("Start Cell: " + m.getStartCellCoord() + "Finish Cell:"  + m.getFinishCellCoord());
-        this.mazeToFile(m);
-
+        try {
+            this.mazeToFile(m, fileName);
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     private void printMazeWalls(Maze m) {
@@ -264,7 +270,11 @@ public class MazeGenerator {
     }
 
 
-    private void mazeToFile(Maze m) {
-        System.out.println(m);
+    private void mazeToFile(Maze m, Path filePath) throws IOException {
+        if (Files.exists(filePath)) {
+            Files.delete(filePath);
+        }
+        Path path = Files.createFile(filePath);
+        Files.writeString(path, m.toString());
     }
 }
