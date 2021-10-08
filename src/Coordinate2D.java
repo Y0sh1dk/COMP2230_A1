@@ -15,14 +15,6 @@ public class Coordinate2D {
         return Y;
     }
 
-    @Override
-    public String toString() {
-        return "Coordinate2D{" +
-                "X=" + X +
-                ", Y=" + Y +
-                '}';
-    }
-
     public static boolean isCoordsNeighbours(Coordinate2D coord1, Coordinate2D coord2) {
         if (new Coordinate2D(coord1.getX() + 1, coord1.getY()).equals(coord2)) {
             return true;
@@ -35,6 +27,14 @@ public class Coordinate2D {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Coordinate2D{" +
+                "X=" + X +
+                ", Y=" + Y +
+                '}';
     }
 
     @Override

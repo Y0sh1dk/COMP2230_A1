@@ -31,17 +31,27 @@ public class MazeSolverDFS {
         } catch (Exception e) {
             return;
         }
-        System.out.println("Maze String: ");
-        System.out.println(m);
-
-        System.out.println("\n-------------CELL VALUES-------------");
-        this.printMazeOpenness(m);
-
-
+        long startTime = System.currentTimeMillis();
         ArrayList<Coordinate2D> solvePath = this.solveMazePath(m);
+        long endTime = System.currentTimeMillis();
+
+        this.printSummary(m, solvePath, endTime - startTime);
+
+    }
+
+    private void printSummary(Maze m, ArrayList<Coordinate2D> solvePath, long solveTime) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        String suffix = "";
         for (Coordinate2D coord : solvePath) {
-            System.out.print(m.coordToIndex(coord.getX(), coord.getY()) +",");
+            sb.append(suffix);
+            sb.append(m.coordToIndex(coord.getX(), coord.getY()));
+            suffix = ",";
         }
+        sb.append(")");
+        System.out.println(sb);
+        System.out.println(solvePath.size() - 1);
+        System.out.println(solveTime + "ms");
     }
 
     private ArrayList<Coordinate2D> solveMazePath(Maze m) {

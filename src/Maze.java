@@ -12,7 +12,7 @@ public class Maze {
     }
 
     /**
-     * Initialise all cells to zero
+     * Initialise all cells to null
      */
     private void initialize() {
         for (Integer[] row: this.cells) {
@@ -39,7 +39,7 @@ public class Maze {
         // Get all valid coords around it
         ArrayList<Coordinate2D> validNeighbours = this.getNeighbours(inCoord);
 
-        // remove ones cant travel too.
+        // remove neighbours we cant travel too.
         for (Coordinate2D nextCoord : validNeighbours) {
             Direction directionOfNextCell = directionOfCell(inCoord, nextCoord);
             switch (directionOfNextCell) {
@@ -164,11 +164,5 @@ public class Maze {
 
     public void setFinishCellCoord(Coordinate2D finishCellCoord) {
         this.finishCellCoord = finishCellCoord;
-    }
-}
-
-class InvalidCellException extends Exception {
-    InvalidCellException(int inC, int inR) {
-        super(String.format("Invalid Cell: Cell[%s][%s]", inC, inR));
     }
 }
