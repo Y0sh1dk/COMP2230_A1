@@ -75,8 +75,8 @@ public class MazeGenerator {
         }
     }
 
-    private HashMap<Coordinate2D, ArrayList<Direction>> getCellTravelDirections(ArrayList<Coordinate2D> path, Maze m) {
-        HashMap<Coordinate2D, ArrayList<Direction>> cellTravelDirections = new HashMap<>();
+    private HashMap<Coordinate2D, ArrayList<Maze.Direction>> getCellTravelDirections(ArrayList<Coordinate2D> path, Maze m) {
+        HashMap<Coordinate2D, ArrayList<Maze.Direction>> cellTravelDirections = new HashMap<>();
 
         // add keys into hashmap
         for (Coordinate2D coord : path) {
@@ -106,8 +106,8 @@ public class MazeGenerator {
             if (prevCoord != null && nextCoord != null) {
                 // If continuing on path
                 if (Coordinate2D.isCoordsNeighbours(currentCoord, nextCoord)) {
-                    cellTravelDirections.get(nextCoord).add(directionOfCell(nextCoord, currentCoord));
-                    cellTravelDirections.get(currentCoord).add(directionOfCell(currentCoord, nextCoord));
+                    cellTravelDirections.get(nextCoord).add(Maze.directionOfCell(nextCoord, currentCoord));
+                    cellTravelDirections.get(currentCoord).add(Maze.directionOfCell(currentCoord, nextCoord));
                 }
                 // If had backtracked
                 if (!Coordinate2D.isCoordsNeighbours(currentCoord, prevCoord)) {
@@ -118,8 +118,8 @@ public class MazeGenerator {
                             break;
                         }
                     }
-                    cellTravelDirections.get(currentCoord).add(directionOfCell(currentCoord, cameFromCoord));
-                    cellTravelDirections.get(cameFromCoord).add(directionOfCell(cameFromCoord, currentCoord));
+                    cellTravelDirections.get(currentCoord).add(Maze.directionOfCell(currentCoord, cameFromCoord));
+                    cellTravelDirections.get(cameFromCoord).add(Maze.directionOfCell(cameFromCoord, currentCoord));
                 }
 
             }
@@ -127,15 +127,15 @@ public class MazeGenerator {
             else if (prevCoord == null) {
                 // Should always be
                 if (Coordinate2D.isCoordsNeighbours(currentCoord, nextCoord)) {
-                    cellTravelDirections.get(currentCoord).add(directionOfCell(currentCoord, nextCoord));
-                    cellTravelDirections.get(nextCoord).add(directionOfCell(nextCoord, currentCoord));
+                    cellTravelDirections.get(currentCoord).add(Maze.directionOfCell(currentCoord, nextCoord));
+                    cellTravelDirections.get(nextCoord).add(Maze.directionOfCell(nextCoord, currentCoord));
                 }
             }
             // End Cell
             else if (nextCoord == null) {
                 // If not backtracking
                 if (Coordinate2D.isCoordsNeighbours(currentCoord, prevCoord)) {
-                    cellTravelDirections.get(currentCoord).add(directionOfCell(currentCoord, prevCoord));
+                    cellTravelDirections.get(currentCoord).add(Maze.directionOfCell(currentCoord, prevCoord));
                 }
                 // Backtracking!
                 else {
@@ -146,8 +146,8 @@ public class MazeGenerator {
                             break;
                         }
                     }
-                    cellTravelDirections.get(currentCoord).add(directionOfCell(currentCoord, cameFromCoord));
-                    cellTravelDirections.get(cameFromCoord).add(directionOfCell(cameFromCoord, currentCoord));
+                    cellTravelDirections.get(currentCoord).add(Maze.directionOfCell(currentCoord, cameFromCoord));
+                    cellTravelDirections.get(cameFromCoord).add(Maze.directionOfCell(cameFromCoord, currentCoord));
                 }
             }
         }
@@ -156,20 +156,20 @@ public class MazeGenerator {
 
 
     private void updateMazeCells(ArrayList<Coordinate2D> path, Maze m) {
-        HashMap<Coordinate2D, ArrayList<Direction>> cellTravelDirection = this.getCellTravelDirections(path, m);
+        HashMap<Coordinate2D, ArrayList<Maze.Direction>> cellTravelDirection = this.getCellTravelDirections(path, m);
 
-        for (Map.Entry<Coordinate2D, ArrayList<Direction>> entry : cellTravelDirection.entrySet()) {
+        for (Map.Entry<Coordinate2D, ArrayList<Maze.Direction>> entry : cellTravelDirection.entrySet()) {
             Coordinate2D coord = entry.getKey();
             // Contains both right and down
-            if(entry.getValue().contains(Direction.RIGHT) && entry.getValue().contains(Direction.DOWN)) {
+            if(entry.getValue().contains(Maze.Direction.RIGHT) && entry.getValue().contains(Maze.Direction.DOWN)) {
                 m.setCellValue(coord.getX(), coord.getY(), 3);
             }
             // Only down open
-            else if(entry.getValue().contains(Direction.RIGHT)) {
+            else if(entry.getValue().contains(Maze.Direction.RIGHT)) {
                 m.setCellValue(coord.getX(), coord.getY(), 1);
             }
             // Only right open
-            else if(entry.getValue().contains(Direction.DOWN)) {
+            else if(entry.getValue().contains(Maze.Direction.DOWN)) {
                 m.setCellValue(coord.getX(), coord.getY(), 2);
             }
             // neither
@@ -179,39 +179,6 @@ public class MazeGenerator {
         }
     }
 
-
-
-
-    // Direction to next coord
-    private Direction directionOfCell(Coordinate2D coord, Coordinate2D nextCoord) {
-        // Up
-        if (coord.getX() == nextCoord.getX() && coord.getY() > nextCoord.getY()) {
-            return Direction.UP;
-        }
-        // Down
-        else if (coord.getX() == nextCoord.getX() && coord.getY() < nextCoord.getY()) {
-            return Direction.DOWN;
-        }
-        // Left
-        else if (coord.getX() > nextCoord.getX() && coord.getY() == nextCoord.getY()) {
-            return Direction.LEFT;
-        }
-        // Right
-        else if (coord.getX() < nextCoord.getX() && coord.getY() == nextCoord.getY()) {
-            return Direction.RIGHT;
-        }
-        // Shouldnt get here
-        else {
-            return null;
-        }
-    }
-
-    enum Direction {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT,
-    }
 
     private void printPath(ArrayList<Coordinate2D> path, Maze m) {
         // Print the path

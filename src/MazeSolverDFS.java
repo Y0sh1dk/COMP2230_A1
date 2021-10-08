@@ -2,8 +2,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class MazeSolverDFS {
     public static void main(String[] args) {
@@ -29,10 +31,113 @@ public class MazeSolverDFS {
         } catch (Exception e) {
             return;
         }
+        System.out.println("Maze String: ");
         System.out.println(m);
 
+        System.out.println("\n-------------CELL VALUES-------------");
+        this.printMazeOpenness(m);
 
 
+        ArrayList<Coordinate2D> solvePath = this.solveMazePath(m);
+        for (Coordinate2D coord : solvePath) {
+            System.out.print(m.coordToIndex(coord.getX(), coord.getY()) +",");
+        }
+    }
+
+    private ArrayList<Coordinate2D> solveMazePath(Maze m) {
+        ArrayList<Coordinate2D> visitedCoords = new ArrayList<>();
+        Stack<Coordinate2D> coordStack = new Stack<>();
+
+        // Ranking of directions :)
+        Maze.Direction[] directionRanking = {Maze.Direction.DOWN, Maze.Direction.RIGHT, Maze.Direction.LEFT, Maze.Direction.UP};
+
+        // Set finish cell
+        Coordinate2D finishCell = m.getFinishCellCoord();
+        // Set start cell
+        Coordinate2D startCell = m.getStartCellCoord();
+        m.setStartCellCoord(startCell);
+        coordStack.push(startCell);
+
+        // While stack isnt empty
+        while(!coordStack.isEmpty()) {
+            // Get cell at top of stack
+            Coordinate2D currentCellCoord = coordStack.pop();
+
+            visitedCoords.add(currentCellCoord);
+
+            // We made it!
+            if (currentCellCoord.equals(finishCell)) {
+                break;
+            }
+
+            // Get available neighbours of cell
+            ArrayList<Coordinate2D> availableNeighboursIndex = m.getVisitableNeighbours(currentCellCoord);
+            availableNeighboursIndex.removeAll(visitedCoords);
+
+            Coordinate2D nextCoord = null;
+            int nextCoordRank = 0;
+
+            for (Coordinate2D coord : availableNeighboursIndex) {
+                if(Maze.directionOfCell(currentCellCoord, coord) == Maze.Direction.UP) {
+                    if(Arrays.asList(directionRanking).indexOf(Maze.Direction.UP) >= nextCoordRank) {
+                        nextCoordRank = Arrays.asList(directionRanking).indexOf(Maze.Direction.UP);
+                        nextCoord = coord;
+                    }
+                }
+                if(Maze.directionOfCell(currentCellCoord, coord) == Maze.Direction.LEFT) {
+                    if(Arrays.asList(directionRanking).indexOf(Maze.Direction.LEFT) >= nextCoordRank) {
+                        nextCoordRank = Arrays.asList(directionRanking).indexOf(Maze.Direction.LEFT);
+                        nextCoord = coord;
+                    }
+                }
+                if(Maze.directionOfCell(currentCellCoord, coord) == Maze.Direction.RIGHT) {
+                    if(Arrays.asList(directionRanking).indexOf(Maze.Direction.RIGHT) >= nextCoordRank) {
+                        nextCoordRank = Arrays.asList(directionRanking).indexOf(Maze.Direction.RIGHT);
+                        nextCoord = coord;
+                    }
+                }
+                if(Maze.directionOfCell(currentCellCoord, coord) == Maze.Direction.DOWN) {
+                    if(Arrays.asList(directionRanking).indexOf(Maze.Direction.DOWN) >= nextCoordRank) {
+                        nextCoordRank = Arrays.asList(directionRanking).indexOf(Maze.Direction.DOWN);
+                        nextCoord = coord;
+                    }
+                }
+            }
+
+            // We aint backtracking yet :)
+            if (nextCoord != null) {
+                // Push current coord back onto the stack :)
+                coordStack.push(currentCellCoord);
+                coordStack.push(nextCoord);
+            }
+        }
+        return visitedCoords;
+    }
+
+    private void printPath(ArrayList<Coordinate2D> path, Maze m) {
+        // Print the path
+        for (int y = 0; y <= m.numOfRows(); y++) {
+            for (int x = 0; x <= m.numOfColumns(); x++) {
+                if (path.contains(new Coordinate2D(x,y))) {
+                    System.out.print(centerString(5,String.valueOf(path.indexOf(new Coordinate2D(x,y)))));
+                }
+            }
+            System.out.println("\n");
+        }
+    }
+
+    private void printMazeOpenness(Maze m) {
+        for (int y = 0; y < m.numOfRows(); y++){
+            for (int x = 0; x < m.numOfColumns(); x++) {
+                System.out.print(centerString(5, String.valueOf(m.getCellValue(x, y))));
+            }
+            System.out.println("\n");
+        }
+    }
+
+    // TODO(Yoshi): Factor out
+    public static String centerString (int width, String s) {
+        return String.format("%-" + width  + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
     }
 
 
@@ -55,7 +160,6 @@ public class MazeSolverDFS {
             for (int j = 0; j < m.numOfColumns(); j++) {
                 int index = m.coordToIndex(j, i) - 1;
                 int cellValue = Integer.parseInt(String.valueOf(fileStringArray[3].charAt(index)));
-                //System.out.println("Brrr");
                 m.setCellValue(j, i, cellValue);
             }
         }

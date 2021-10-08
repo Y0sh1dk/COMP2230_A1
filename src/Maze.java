@@ -34,6 +34,42 @@ public class Maze {
         return neighbourCoords;
     }
 
+    public ArrayList<Coordinate2D> getVisitableNeighbours(Coordinate2D inCoord) {
+        ArrayList<Coordinate2D> visitableNeighbours = new ArrayList<>();
+        // Get all valid coords around it
+        ArrayList<Coordinate2D> validNeighbours = this.getNeighbours(inCoord);
+
+        // remove ones cant travel too.
+        for (Coordinate2D nextCoord : validNeighbours) {
+            Direction directionOfNextCell = directionOfCell(inCoord, nextCoord);
+            switch (directionOfNextCell) {
+                case UP:
+                    // If next cell is 3 or 2
+                    if (this.getCellValue(nextCoord.getX(), nextCoord.getY()) == 3 || this.getCellValue(nextCoord.getX(), nextCoord.getY()) == 2) {
+                        visitableNeighbours.add(nextCoord);
+                    }
+                    break;
+                case DOWN:
+                    // If this cell 3 or 2
+                    if (this.getCellValue(inCoord.getX(), inCoord.getY()) == 3 || this.getCellValue(inCoord.getX(), inCoord.getY()) == 2) {
+                        visitableNeighbours.add(nextCoord);
+                    }
+                    break;
+                case LEFT:
+                    if (this.getCellValue(nextCoord.getX(), nextCoord.getY()) == 1 || this.getCellValue(nextCoord.getX(), nextCoord.getY()) == 3) {
+                        visitableNeighbours.add(nextCoord);
+                    }
+                    break;
+                case RIGHT:
+                    if (this.getCellValue(inCoord.getX(), inCoord.getY()) == 1 || this.getCellValue(inCoord.getX(), inCoord.getY()) == 3) {
+                        visitableNeighbours.add(nextCoord);
+                    }
+                    break;
+            }
+        }
+        return visitableNeighbours;
+    }
+
     public void setCellValue(int inX, int inY, int inValue) {
         this.cells[inX][inY] = inValue;
     }
@@ -44,6 +80,37 @@ public class Maze {
 
     private boolean isValidCoord(Coordinate2D inCoord) {
         return (inCoord.getX() < this.cells.length && inCoord.getX() >= 0) && (inCoord.getY() < this.cells[0].length && inCoord.getY() >= 0);
+    }
+
+    // Direction to next coord
+    public static Direction directionOfCell(Coordinate2D coord, Coordinate2D nextCoord) {
+        // Up
+        if (coord.getX() == nextCoord.getX() && coord.getY() > nextCoord.getY()) {
+            return Direction.UP;
+        }
+        // Down
+        else if (coord.getX() == nextCoord.getX() && coord.getY() < nextCoord.getY()) {
+            return Direction.DOWN;
+        }
+        // Left
+        else if (coord.getX() > nextCoord.getX() && coord.getY() == nextCoord.getY()) {
+            return Direction.LEFT;
+        }
+        // Right
+        else if (coord.getX() < nextCoord.getX() && coord.getY() == nextCoord.getY()) {
+            return Direction.RIGHT;
+        }
+        // Shouldnt get here
+        else {
+            return null;
+        }
+    }
+
+    enum Direction {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
     }
 
     @Override
