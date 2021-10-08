@@ -1,30 +1,27 @@
 # COMP2230_A1
 
-You must use Java to do your programming. Your submission should contain:
+## Compiling
 
- - the code with:
+      javac MazeGenerator.java MazeSolverDFS.java
 
-    - classes named correctly as specified in each part
+## Running
 
-    - Use command line arguments for input e.g.
+### Maze Generator
 
-        - java MazeGenerator 5 6 maze.dat
+      java MazeGenerator <x_size> <y_size> <filepath>
 
-        - java MazeSolverDFS maze.dat
+### Maze Solver
 
-        Note should handle any filename or extension
+      java MazeSolverDFS <filepath>
 
-    - Solvers should print to Standard Output e.g.
-    
-    (1,2,7,6,11,17,12,13,14,15,10,9,4,5,4,9,8,3)
-    
-    17
-    
-    99
+## Examples
 
- - a readme file containing instructions on how to run your program
- - for pairs assignment, a text file with all test mazes used in your analysis,
- - for pairs assignment, a document containing the table and your analysis of your test
-data
- - a filled in Assessment Item Coversheet. (Note that we cannot mark your submission
-if there is no coversheet)
+An example `example_maze.dat` file has been included. To run the solver against this file, first compile, then run:
+
+      java MazeSolverDFS example_maze.dat
+
+The output should be like so
+
+      (1,2,7,6,11,16,21,22,17,12,13,14,15,10,9,4,5,4,9,8,3)
+      20
+      2ms

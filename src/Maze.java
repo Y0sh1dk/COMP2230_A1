@@ -75,11 +75,13 @@ public class Maze {
                     }
                     break;
                 case LEFT:
+                    // If next cell is 1 or 3
                     if (this.getCellValue(nextCoord.getX(), nextCoord.getY()) == 1 || this.getCellValue(nextCoord.getX(), nextCoord.getY()) == 3) {
                         visitableNeighbours.add(nextCoord);
                     }
                     break;
                 case RIGHT:
+                    // If this cell is 1 or 3
                     if (this.getCellValue(inCoord.getX(), inCoord.getY()) == 1 || this.getCellValue(inCoord.getX(), inCoord.getY()) == 3) {
                         visitableNeighbours.add(nextCoord);
                     }

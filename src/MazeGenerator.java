@@ -14,7 +14,7 @@ import java.util.*;
 public class MazeGenerator {
     public static void main(String[] args) {
         if (args.length != 3) {
-            System.out.println("Invalid arguments, Example: java MazeGenerator 5 6 maze.dat");
+            System.out.println("Invalid arguments, Example: java MazeGenerator 5 6 example_maze.dat");
         }
         // Check arguments
         int mazeXLength, mazeYLength;

@@ -17,7 +17,7 @@ import java.util.Stack;
 public class MazeSolverDFS {
     public static void main(String[] args) {
         if (args.length != 1) {
-            System.out.println("Invalid arguments, Example: java MazeSolverDFS maze.dat");
+            System.out.println("Invalid arguments, Example: java MazeSolverDFS example_maze.dat");
         }
         // Check if file exists
         Path filePath = Paths.get(args[0]);
@@ -45,6 +45,7 @@ public class MazeSolverDFS {
         ArrayList<Coordinate2D> solvePath = this.solveMazePath(m);
         long endTime = System.currentTimeMillis();
 
+        // Print summary
         this.printSummary(m, solvePath, endTime - startTime);
     }
 
