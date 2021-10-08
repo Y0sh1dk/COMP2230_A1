@@ -57,13 +57,11 @@ public class Maze {
                 sb.append(this.cells[j][i]);
             }
         }
-
-
         return sb.toString();
     }
 
     public int coordToIndex(Coordinate2D coord) {
-        return 0;
+        return ((coord.getY() * this.numOfColumns()) + coord.getX()) + 1;
     }
 
     public int numOfRows() {
