@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Class used to represent a maze generator
@@ -242,7 +243,7 @@ public class MazeGenerator {
 
 
     /**
-     * Randomlly generate a path in the maze
+     * Randomly generate a path in the maze
      * @param m maze
      * @return path
      */
@@ -250,8 +251,11 @@ public class MazeGenerator {
         ArrayList<Coordinate2D> visitedCoords = new ArrayList<>();
         Stack<Coordinate2D> coordStack = new Stack<>();
 
+        int randomX = ThreadLocalRandom.current().nextInt(0, m.numOfColumns());
+        int randomY = ThreadLocalRandom.current().nextInt(0, m.numOfRows());
+
         // Set start cell
-        Coordinate2D startCell = new Coordinate2D(0,0);
+        Coordinate2D startCell = new Coordinate2D(randomX,randomY);
         m.setStartCellCoord(startCell);
         coordStack.push(startCell);
 
