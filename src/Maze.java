@@ -1,26 +1,69 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Maze {
-    private Cell[][] cells;
-    private Cell startCell;
-    private Cell finishCell;
+    private Integer[][] cells;
+    private Coordinate2D startCellCoord;
+    private Coordinate2D finishCellCoord;
 
-    public Maze(int NLength, int MLength) {
-        this.cells = new Cell[NLength][MLength];
+    public Maze(int XLength, int YLength) {
+        this.cells = new Integer[XLength][YLength];
         this.initialize();
     }
 
+    /**
+     * Initialise all cells to zero
+     */
     private void initialize() {
-        //    for (Cell[] row : cells) {
-        //        Arrays.fill(row, new Cell());
-        //    }
-        //}
-        int i = 0;
-        for (Cell[] row: this.cells) {
-            for (Cell c: row) {
+        for (Integer[] row: this.cells) {
+            Arrays.fill(row, 6);
+        }
+    }
 
+    public ArrayList<Coordinate2D> getNeighbours(Coordinate2D inCoord) {
+        ArrayList<Coordinate2D> neighbourCoords = new ArrayList<>();
+
+        neighbourCoords.add(new Coordinate2D(inCoord.getX(), inCoord.getY() + 1));
+        neighbourCoords.add(new Coordinate2D(inCoord.getX(), inCoord.getY() - 1));
+        neighbourCoords.add(new Coordinate2D(inCoord.getX() - 1, inCoord.getY()));
+        neighbourCoords.add(new Coordinate2D(inCoord.getX() + 1, inCoord.getY()));
+
+        // Remove if not valid coord
+        neighbourCoords.removeIf(index -> (!isValidCoord(index)));
+
+        return neighbourCoords;
+    }
+
+    public void setCellValue(int inX, int inY, int inValue) {
+        this.cells[inX][inY] = inValue;
+    }
+
+    public Integer getCellValue(int inX, int inY) {
+        return this.cells[inX][inY];
+    }
+
+    private boolean isValidCoord(Coordinate2D inCoord) {
+        return (inCoord.getX() < this.cells.length && inCoord.getX() >= 0) && (inCoord.getY() < this.cells[0].length && inCoord.getY() >= 0);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.numOfColumns()).append(",").append(this.numOfRows()).append(":");
+        sb.append(this.coordToIndex(startCellCoord)).append(":").append(this.coordToIndex(finishCellCoord)).append(":");
+        // Add cell openness
+        for (int i = 0; i < this.numOfRows(); i++) {
+            for (int j = 0; j < this.numOfColumns(); j++) {
+                sb.append(this.cells[j][i]);
             }
         }
+
+
+        return sb.toString();
+    }
+
+    public int coordToIndex(Coordinate2D coord) {
+        return 0;
     }
 
     public int numOfRows() {
@@ -31,53 +74,21 @@ public class Maze {
         return this.cells.length;
     }
 
-    public void setCell(int inC, int inR, Cell.Type inType, Cell.Status inStatus) throws InvalidCellException {
-        if (inC <= this.cells.length && inR <= this.cells[0].length) {
-            this.cells[inC][inR].setType(inType);
-            this.cells[inC][inR].setStatus(inStatus);
-        } else {
-            throw new InvalidCellException(inC, inR);
-        }
+
+    public Coordinate2D getStartCellCoord() {
+        return startCellCoord;
     }
 
-    public void setCell(int inC, int inR, Cell.Type inType) throws InvalidCellException {
-        if (inC <= this.cells.length && inR <= this.cells[0].length) {
-            this.setCell(inC, inR, inType, this.cells[inC][inR].getStatus());
-        }
+    public void setStartCellCoord(Coordinate2D startCellCoord) {
+        this.startCellCoord = startCellCoord;
     }
 
-    public void setCell(int inC, int inR, Cell.Status inStatus) throws InvalidCellException {
-        if (inC <= this.cells.length && inR <= this.cells[0].length) {
-            this.setCell(inC, inR, this.cells[inC][inR].getType(), inStatus);
-        }
+    public Coordinate2D getFinishCellCoord() {
+        return finishCellCoord;
     }
 
-    public void setStartCell(int inC, int inR) throws InvalidCellException {
-        this.startCell = this.cells[inC][inR];
-        this.setCell(inC, inR, Cell.Type.START);
-    }
-
-    public void setFinishCell(int inC, int inR) throws InvalidCellException {
-        this.finishCell = this.cells[inC][inR];
-        this.setCell(inC, inR, Cell.Type.FINISH);
-    }
-
-    public Cell getCell(int inC, int inR) throws InvalidCellException {
-        if (inC <= this.cells.length && inR <= this.cells[0].length) {
-            return this.cells[inC][inR];
-        }
-        else {
-            throw new InvalidCellException(inC, inR);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Maze{" +
-                "cells=" + Arrays.toString(cells) +
-                ", startCell=" + startCell +
-                ", finishCell=" + finishCell +
-                '}';
+    public void setFinishCellCoord(Coordinate2D finishCellCoord) {
+        this.finishCellCoord = finishCellCoord;
     }
 }
 

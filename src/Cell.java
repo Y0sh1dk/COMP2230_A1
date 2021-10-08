@@ -1,24 +1,20 @@
 public class Cell {
-    private Type type;
     private Status status;
-    private int cellNum;
+
 
     public Cell() {
-        this.type = null;
         this.status = null;
     }
 
-    public Cell(Type inType, Status inStatus, int cellNum) {
-        this();
-        this.type = inType;
-        this.status = inStatus;
+
+    public Status getStatus() {
+        return status;
     }
 
-    enum Type {
-        START,
-        FINISH,
-        INNER
+    public void setStatus(Status status) {
+        this.status = status;
     }
+
 
     enum Status {
         BOTH_CLOSED,
@@ -27,29 +23,6 @@ public class Cell {
         BOTH_OPEN
     }
 
-    public Status getStatus() {
-        return this.status;
-    }
 
-    public Type getType() {
-        return this.type;
-    }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return "Cell{" +
-                "type=" + type +
-                ", status=" + status +
-                '}';
-    }
 }
-
-

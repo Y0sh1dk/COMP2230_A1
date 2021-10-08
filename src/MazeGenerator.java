@@ -1,58 +1,270 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Random;
+import java.util.*;
 
 public class MazeGenerator {
     public static void main(String[] args) {
         if (args.length != 3) {
             System.out.println("Invalid arguments, Example: java MazeGenerator 5 6 maze.dat");
         }
-
         // Check arguments
-        int mazeNLength, mazeMLength;
+        int mazeXLength, mazeYLength;
         Path filePath;
         try {
-            mazeNLength = Integer.parseInt(args[0]);
-            mazeMLength = Integer.parseInt(args[1]);
+            mazeXLength = Integer.parseInt(args[0]);
+            mazeYLength = Integer.parseInt(args[1]);
             filePath = Paths.get(args[2]);
         } catch (Exception e) {
             return;
         }
 
         MazeGenerator MG = new MazeGenerator();
-        MG.run(mazeNLength, mazeMLength, filePath);
+        MG.run(mazeXLength, mazeYLength, filePath);
     }
 
-    private void run(int inMazeNLength, int inMazeMLength, Path fileName) {
-        Maze m  = this.generateMaze(inMazeNLength, inMazeMLength);
+    private void run(int inX, int inY, Path fileName) {
+        Maze m = new Maze(inX, inY);
+        ArrayList<Coordinate2D> path = this.generatePath(m);
+        System.out.println("\n-------------GENERATION PATH-------------");
+        this.printPath(path, m);
+        this.updateMazeCells(path, m);
+        System.out.println("\n-------------CELL VALUES-------------");
+        this.printMazeOpenness(m);
+        System.out.println("\n-------------CELL WALLS-------------");
+        this.printMazeWalls(m);
+        System.out.println("Start Cell: " + m.getStartCellCoord() + "Finish Cell:"  + m.getFinishCellCoord());
+        this.mazeToFile(m);
+
     }
 
-    private Maze generateMaze(int inMazeNLength, int inMazeMLength) {
-        Random random = new Random();
-        Maze m = new Maze(inMazeNLength, inMazeMLength);
-        Boolean[][] visited = new Boolean[inMazeNLength][inMazeMLength];
-
-        // Randomly select starting cell
-        try {
-            m.setStartCell(random.nextInt(inMazeNLength), random.nextInt(inMazeMLength));
-        } catch (InvalidCellException e) {
-            System.out.println(e);
+    private void printMazeWalls(Maze m) {
+        for (int y = 0; y < m.numOfRows(); y++){
+            for (int x = 0; x < m.numOfColumns(); x++) {
+                int openness = m.getCellValue(x, y);
+                switch (openness) {
+                    case 0:
+                        System.out.print(centerString(5, "_|"));
+                    break;
+                    case 1:
+                        System.out.print(centerString(5, "_"));
+                    break;
+                    case 2:
+                        System.out.print(centerString(5, "|"));
+                    break;
+                    case 3:
+                        System.out.print(centerString(5, " "));
+                    break;
+                }
+            }
+            System.out.println("\n");
         }
-        
-        // Walk entire maze
-        int cellsVisited = 1;
-        while(cellsVisited < inMazeNLength*inMazeMLength) {
-
-
-
-            cellsVisited++;
-        }
-
-
-        return m;
     }
 
-    private void mazeToFile() {
+    private void printMazeOpenness(Maze m) {
+        for (int y = 0; y < m.numOfRows(); y++){
+             for (int x = 0; x < m.numOfColumns(); x++) {
+                System.out.print(centerString(5, String.valueOf(m.getCellValue(x, y))));
+            }
+            System.out.println("\n");
+        }
+    }
 
+    private HashMap<Coordinate2D, ArrayList<Direction>> getCellTravelDirections(ArrayList<Coordinate2D> path, Maze m) {
+        HashMap<Coordinate2D, ArrayList<Direction>> cellTravelDirections = new HashMap<>();
+
+        // add keys into hashmap
+        for (Coordinate2D coord : path) {
+            cellTravelDirections.putIfAbsent(coord, new ArrayList<>());
+        }
+
+        // Loop through the whole path :)
+        for (int i = 0; i < path.size(); i++) {
+
+            Coordinate2D prevCoord;
+            Coordinate2D currentCoord;
+            Coordinate2D nextCoord;
+            try {
+                prevCoord = path.get(i - 1);
+            } catch (Exception e) {
+                prevCoord = null;
+            }
+            currentCoord = path.get(i);
+
+            try {
+                nextCoord = path.get(i + 1);
+            } catch (Exception e) {
+                nextCoord = null;
+            }
+
+            // Inner path
+            if (prevCoord != null && nextCoord != null) {
+                // If continuing on path
+                if (Coordinate2D.isCoordsNeighbours(currentCoord, nextCoord)) {
+                    cellTravelDirections.get(nextCoord).add(directionOfCell(nextCoord, currentCoord));
+                    cellTravelDirections.get(currentCoord).add(directionOfCell(currentCoord, nextCoord));
+                }
+                // If had backtracked
+                if (!Coordinate2D.isCoordsNeighbours(currentCoord, prevCoord)) {
+                    Coordinate2D cameFromCoord = null;
+                    for (int j = path.indexOf(currentCoord) - 1; j >= 0; j--) {
+                        if (Coordinate2D.isCoordsNeighbours(path.get(j), currentCoord)) {
+                            cameFromCoord = path.get(j);
+                            break;
+                        }
+                    }
+                    cellTravelDirections.get(currentCoord).add(directionOfCell(currentCoord, cameFromCoord));
+                    cellTravelDirections.get(cameFromCoord).add(directionOfCell(cameFromCoord, currentCoord));
+                }
+
+            }
+            // Start Cell
+            else if (prevCoord == null) {
+                // Should always be
+                if (Coordinate2D.isCoordsNeighbours(currentCoord, nextCoord)) {
+                    cellTravelDirections.get(currentCoord).add(directionOfCell(currentCoord, nextCoord));
+                    cellTravelDirections.get(nextCoord).add(directionOfCell(nextCoord, currentCoord));
+                }
+            }
+            // End Cell
+            else if (nextCoord == null) {
+                // If not backtracking
+                if (Coordinate2D.isCoordsNeighbours(currentCoord, prevCoord)) {
+                    cellTravelDirections.get(currentCoord).add(directionOfCell(currentCoord, prevCoord));
+                }
+                // Backtracking!
+                else {
+                    Coordinate2D cameFromCoord = null;
+                    for (int j = path.indexOf(currentCoord) - 1; j >= 0; j--) {
+                        if (Coordinate2D.isCoordsNeighbours(path.get(j), currentCoord)) {
+                            cameFromCoord = path.get(j);
+                            break;
+                        }
+                    }
+                    cellTravelDirections.get(currentCoord).add(directionOfCell(currentCoord, cameFromCoord));
+                    cellTravelDirections.get(cameFromCoord).add(directionOfCell(cameFromCoord, currentCoord));
+                }
+            }
+        }
+        return cellTravelDirections;
+    }
+
+
+    private void updateMazeCells(ArrayList<Coordinate2D> path, Maze m) {
+        HashMap<Coordinate2D, ArrayList<Direction>> cellTravelDirection = this.getCellTravelDirections(path, m);
+
+        for (Map.Entry<Coordinate2D, ArrayList<Direction>> entry : cellTravelDirection.entrySet()) {
+            Coordinate2D coord = entry.getKey();
+            // Contains both right and down
+            if(entry.getValue().contains(Direction.RIGHT) && entry.getValue().contains(Direction.DOWN)) {
+                m.setCellValue(coord.getX(), coord.getY(), 3);
+            }
+            // Only down open
+            else if(entry.getValue().contains(Direction.RIGHT)) {
+                m.setCellValue(coord.getX(), coord.getY(), 1);
+            }
+            // Only right open
+            else if(entry.getValue().contains(Direction.DOWN)) {
+                m.setCellValue(coord.getX(), coord.getY(), 2);
+            }
+            // neither
+            else {
+                m.setCellValue(coord.getX(), coord.getY(), 0);
+            }
+        }
+    }
+
+
+
+
+    // Direction to next coord
+    private Direction directionOfCell(Coordinate2D coord, Coordinate2D nextCoord) {
+        // Up
+        if (coord.getX() == nextCoord.getX() && coord.getY() > nextCoord.getY()) {
+            return Direction.UP;
+        }
+        // Down
+        else if (coord.getX() == nextCoord.getX() && coord.getY() < nextCoord.getY()) {
+            return Direction.DOWN;
+        }
+        // Left
+        else if (coord.getX() > nextCoord.getX() && coord.getY() == nextCoord.getY()) {
+            return Direction.LEFT;
+        }
+        // Right
+        else if (coord.getX() < nextCoord.getX() && coord.getY() == nextCoord.getY()) {
+            return Direction.RIGHT;
+        }
+        // Shouldnt get here
+        else {
+            return null;
+        }
+    }
+
+    enum Direction {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
+    }
+
+    private void printPath(ArrayList<Coordinate2D> path, Maze m) {
+        // Print the path
+        for (int y = 0; y <= m.numOfRows(); y++) {
+            for (int x = 0; x <= m.numOfColumns(); x++) {
+                if (path.contains(new Coordinate2D(x,y))) {
+                    System.out.print(centerString(5,String.valueOf(path.indexOf(new Coordinate2D(x,y)))));
+                }
+            }
+            System.out.println("\n");
+        }
+    }
+
+    private ArrayList<Coordinate2D> generatePath(Maze m) {
+        ArrayList<Coordinate2D> visitedCoords = new ArrayList<>();
+        Stack<Coordinate2D> coordStack = new Stack<>();
+
+        // Set start cell
+        Coordinate2D startCell = new Coordinate2D(0,0);
+        m.setStartCellCoord(startCell);
+        coordStack.push(startCell);
+
+        // Run till stack empty
+        while(!coordStack.isEmpty()) {
+            // Get cell at top of stack
+            Coordinate2D currentCellCoord = coordStack.pop();
+
+            if (!visitedCoords.contains(currentCellCoord)) {
+                visitedCoords.add(currentCellCoord);
+            }
+
+            // Get available neighbours of cell
+            ArrayList<Coordinate2D> availableNeighboursIndex = m.getNeighbours(currentCellCoord);
+
+            // Remove if have been visited
+            availableNeighboursIndex.removeAll(visitedCoords);
+
+            // If there are available neighbours!
+            if (!availableNeighboursIndex.isEmpty()) {
+                // Shuffle neighbours
+                Collections.shuffle(availableNeighboursIndex);
+                // Add all neighbours to the stack
+                coordStack.addAll(availableNeighboursIndex);
+            }
+        }
+        // Set finish cell
+        m.setFinishCellCoord(visitedCoords.get(visitedCoords.size()-1));
+
+        return visitedCoords;
+    }
+
+
+    // TODO(Yoshi): Factor out
+    public static String centerString (int width, String s) {
+        return String.format("%-" + width  + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
+    }
+
+
+    private void mazeToFile(Maze m) {
+        System.out.println(m);
     }
 }
