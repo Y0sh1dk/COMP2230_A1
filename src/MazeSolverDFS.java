@@ -22,29 +22,30 @@ public class MazeSolverDFS {
         // Check if file exists
         Path filePath = Paths.get(args[0]);
         File f = new File(String.valueOf(filePath.toAbsolutePath()));
+        // Return if the file doesnt exist
         if (!(f.exists() && !f.isDirectory())) {
             return;
         }
         // Here if file does exist
         MazeSolverDFS MS = new MazeSolverDFS();
         MS.run(filePath);
-
     }
 
 
     private void run(Path p) {
         Maze m;
+        // Try to generate a maze from file, return if file invalid
         try {
             m = fileToMaze(p);
         } catch (Exception e) {
             return;
         }
+
         long startTime = System.currentTimeMillis();
         ArrayList<Coordinate2D> solvePath = this.solveMazePath(m);
         long endTime = System.currentTimeMillis();
 
         this.printSummary(m, solvePath, endTime - startTime);
-
     }
 
 
@@ -95,32 +96,16 @@ public class MazeSolverDFS {
             ArrayList<Coordinate2D> availableNeighboursIndex = m.getVisitableNeighbours(currentCellCoord);
             availableNeighboursIndex.removeAll(visitedCoords);
 
+            // Figure out which neighbour we should visit next!
             Coordinate2D nextCoord = null;
             int nextCoordRank = 0;
             for (Coordinate2D coord : availableNeighboursIndex) {
-                if(Maze.directionOfCell(currentCellCoord, coord) == Maze.Direction.UP) {
-                    if(Arrays.asList(directionRanking).indexOf(Maze.Direction.UP) >= nextCoordRank) {
-                        nextCoordRank = Arrays.asList(directionRanking).indexOf(Maze.Direction.UP);
-                        nextCoord = coord;
-                    }
-                }
-                if(Maze.directionOfCell(currentCellCoord, coord) == Maze.Direction.LEFT) {
-                    if(Arrays.asList(directionRanking).indexOf(Maze.Direction.LEFT) >= nextCoordRank) {
-                        nextCoordRank = Arrays.asList(directionRanking).indexOf(Maze.Direction.LEFT);
-                        nextCoord = coord;
-                    }
-                }
-                if(Maze.directionOfCell(currentCellCoord, coord) == Maze.Direction.RIGHT) {
-                    if(Arrays.asList(directionRanking).indexOf(Maze.Direction.RIGHT) >= nextCoordRank) {
-                        nextCoordRank = Arrays.asList(directionRanking).indexOf(Maze.Direction.RIGHT);
-                        nextCoord = coord;
-                    }
-                }
-                if(Maze.directionOfCell(currentCellCoord, coord) == Maze.Direction.DOWN) {
-                    if(Arrays.asList(directionRanking).indexOf(Maze.Direction.DOWN) >= nextCoordRank) {
-                        nextCoordRank = Arrays.asList(directionRanking).indexOf(Maze.Direction.DOWN);
-                        nextCoord = coord;
-                    }
+                // Find direction of neighbour
+                Maze.Direction neighbourDirection = Maze.directionOfCell(currentCellCoord, coord);
+                // If its ranked higher, use it instead
+                if (Arrays.asList(directionRanking).indexOf(neighbourDirection) >= nextCoordRank) {
+                    nextCoordRank = Arrays.asList(directionRanking).indexOf(neighbourDirection);
+                    nextCoord = coord;
                 }
             }
 
