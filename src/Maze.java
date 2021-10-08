@@ -16,7 +16,7 @@ public class Maze {
      */
     private void initialize() {
         for (Integer[] row: this.cells) {
-            Arrays.fill(row, 6);
+            Arrays.fill(row, null);
         }
     }
 
@@ -61,7 +61,17 @@ public class Maze {
     }
 
     public int coordToIndex(Coordinate2D coord) {
-        return ((coord.getY() * this.numOfColumns()) + coord.getX()) + 1;
+        return this.coordToIndex(coord.getX(), coord.getY());
+    }
+
+    public int coordToIndex(int inX, int inY) {
+        return ((inY * this.numOfColumns()) + inX) + 1;
+    }
+
+    public Coordinate2D indexToCoord(int inIndex) {
+        int x = (inIndex - 1) % this.numOfColumns();
+        int y = (inIndex - 1) / this.numOfColumns();
+        return new Coordinate2D(x, y);
     }
 
     public int numOfRows() {
