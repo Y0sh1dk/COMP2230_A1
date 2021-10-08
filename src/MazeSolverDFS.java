@@ -1,5 +1,11 @@
+/**
+ *  FileName: MazeSolverDFS.java
+ *  Assessment: COMP2230 Assignment
+ *  Author: Yosiah de Koeyer
+ *  Student No: c3329520
+ */
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;

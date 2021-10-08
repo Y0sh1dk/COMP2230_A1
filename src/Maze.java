@@ -1,3 +1,10 @@
+/**
+ *  FileName: Maze.java
+ *  Assessment: COMP2230 Assignment
+ *  Author: Yosiah de Koeyer
+ *  Student No: c3329520
+ */
+
 import java.util.ArrayList;
 import java.util.Arrays;
 

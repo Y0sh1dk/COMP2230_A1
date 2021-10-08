@@ -1,3 +1,10 @@
+/**
+ *  FileName: MazeGenerator.java
+ *  Assessment: COMP2230 Assignment
+ *  Author: Yosiah de Koeyer
+ *  Student No: c3329520
+ */
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

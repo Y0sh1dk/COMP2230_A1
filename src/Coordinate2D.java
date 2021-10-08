@@ -1,3 +1,10 @@
+/**
+ *  FileName: Coordinate2D.java
+ *  Assessment: COMP2230 Assignment
+ *  Author: Yosiah de Koeyer
+ *  Student No: c3329520
+ */
+
 public class Coordinate2D {
     private int X;
     private int Y;
