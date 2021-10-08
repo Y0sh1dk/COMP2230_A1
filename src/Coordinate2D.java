@@ -15,11 +15,11 @@ public class Coordinate2D {
     }
 
     public int getX() {
-        return X;
+        return this.X;
     }
 
     public int getY() {
-        return Y;
+        return this.Y;
     }
 
     public static boolean isCoordsNeighbours(Coordinate2D coord1, Coordinate2D coord2) {

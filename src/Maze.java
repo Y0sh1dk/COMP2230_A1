@@ -13,10 +13,20 @@ public class Maze {
     private Coordinate2D startCellCoord;
     private Coordinate2D finishCellCoord;
 
+
+    enum Direction {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
+    }
+
+
     public Maze(int XLength, int YLength) {
         this.cells = new Integer[XLength][YLength];
         this.initialize();
     }
+
 
     /**
      * Initialise all cells to null
@@ -26,6 +36,7 @@ public class Maze {
             Arrays.fill(row, null);
         }
     }
+
 
     public ArrayList<Coordinate2D> getNeighbours(Coordinate2D inCoord) {
         ArrayList<Coordinate2D> neighbourCoords = new ArrayList<>();
@@ -40,6 +51,7 @@ public class Maze {
 
         return neighbourCoords;
     }
+
 
     public ArrayList<Coordinate2D> getVisitableNeighbours(Coordinate2D inCoord) {
         ArrayList<Coordinate2D> visitableNeighbours = new ArrayList<>();
@@ -77,17 +89,21 @@ public class Maze {
         return visitableNeighbours;
     }
 
+
     public void setCellValue(int inX, int inY, int inValue) {
         this.cells[inX][inY] = inValue;
     }
+
 
     public Integer getCellValue(int inX, int inY) {
         return this.cells[inX][inY];
     }
 
+
     private boolean isValidCoord(Coordinate2D inCoord) {
         return (inCoord.getX() < this.cells.length && inCoord.getX() >= 0) && (inCoord.getY() < this.cells[0].length && inCoord.getY() >= 0);
     }
+
 
     // Direction to next coord
     public static Direction directionOfCell(Coordinate2D coord, Coordinate2D nextCoord) {
@@ -113,12 +129,6 @@ public class Maze {
         }
     }
 
-    enum Direction {
-        UP,
-        DOWN,
-        LEFT,
-        RIGHT,
-    }
 
     @Override
     public String toString() {
@@ -134,13 +144,16 @@ public class Maze {
         return sb.toString();
     }
 
+
     public int coordToIndex(Coordinate2D coord) {
         return this.coordToIndex(coord.getX(), coord.getY());
     }
 
+
     public int coordToIndex(int inX, int inY) {
         return ((inY * this.numOfColumns()) + inX) + 1;
     }
+
 
     public Coordinate2D indexToCoord(int inIndex) {
         int x = (inIndex - 1) % this.numOfColumns();
@@ -148,9 +161,11 @@ public class Maze {
         return new Coordinate2D(x, y);
     }
 
+
     public int numOfRows() {
         return this.cells[0].length;
     }
+
 
     public int numOfColumns() {
         return this.cells.length;
@@ -161,15 +176,19 @@ public class Maze {
         return startCellCoord;
     }
 
+
     public void setStartCellCoord(Coordinate2D startCellCoord) {
         this.startCellCoord = startCellCoord;
     }
+
 
     public Coordinate2D getFinishCellCoord() {
         return finishCellCoord;
     }
 
+
     public void setFinishCellCoord(Coordinate2D finishCellCoord) {
         this.finishCellCoord = finishCellCoord;
     }
+
 }

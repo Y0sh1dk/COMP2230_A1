@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Stack;
 
+
 public class MazeSolverDFS {
     public static void main(String[] args) {
         if (args.length != 1) {
@@ -30,6 +31,7 @@ public class MazeSolverDFS {
 
     }
 
+
     private void run(Path p) {
         Maze m;
         try {
@@ -44,6 +46,7 @@ public class MazeSolverDFS {
         this.printSummary(m, solvePath, endTime - startTime);
 
     }
+
 
     private void printSummary(Maze m, ArrayList<Coordinate2D> solvePath, long solveTime) {
         StringBuilder sb = new StringBuilder();
@@ -60,6 +63,7 @@ public class MazeSolverDFS {
         System.out.println(solveTime + "ms");
     }
 
+
     private ArrayList<Coordinate2D> solveMazePath(Maze m) {
         ArrayList<Coordinate2D> visitedCoords = new ArrayList<>();
         Stack<Coordinate2D> coordStack = new Stack<>();
@@ -69,6 +73,7 @@ public class MazeSolverDFS {
 
         // Set finish cell
         Coordinate2D finishCell = m.getFinishCellCoord();
+
         // Set start cell
         Coordinate2D startCell = m.getStartCellCoord();
         m.setStartCellCoord(startCell);
@@ -92,7 +97,6 @@ public class MazeSolverDFS {
 
             Coordinate2D nextCoord = null;
             int nextCoordRank = 0;
-
             for (Coordinate2D coord : availableNeighboursIndex) {
                 if(Maze.directionOfCell(currentCellCoord, coord) == Maze.Direction.UP) {
                     if(Arrays.asList(directionRanking).indexOf(Maze.Direction.UP) >= nextCoordRank) {
@@ -122,38 +126,12 @@ public class MazeSolverDFS {
 
             // We aint backtracking yet :)
             if (nextCoord != null) {
-                // Push current coord back onto the stack :)
+                // Push current and next coord back onto the stack :)
                 coordStack.push(currentCellCoord);
                 coordStack.push(nextCoord);
             }
         }
         return visitedCoords;
-    }
-
-    private void printPath(ArrayList<Coordinate2D> path, Maze m) {
-        // Print the path
-        for (int y = 0; y <= m.numOfRows(); y++) {
-            for (int x = 0; x <= m.numOfColumns(); x++) {
-                if (path.contains(new Coordinate2D(x,y))) {
-                    System.out.print(centerString(5,String.valueOf(path.indexOf(new Coordinate2D(x,y)))));
-                }
-            }
-            System.out.println("\n");
-        }
-    }
-
-    private void printMazeOpenness(Maze m) {
-        for (int y = 0; y < m.numOfRows(); y++){
-            for (int x = 0; x < m.numOfColumns(); x++) {
-                System.out.print(centerString(5, String.valueOf(m.getCellValue(x, y))));
-            }
-            System.out.println("\n");
-        }
-    }
-
-    // TODO(Yoshi): Factor out
-    public static String centerString (int width, String s) {
-        return String.format("%-" + width  + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
     }
 
 
@@ -179,7 +157,6 @@ public class MazeSolverDFS {
                 m.setCellValue(j, i, cellValue);
             }
         }
-
         // Add start cell
         m.setStartCellCoord(m.indexToCoord(Integer.parseInt(fileStringArray[1])));
 
@@ -188,4 +165,5 @@ public class MazeSolverDFS {
 
         return m;
     }
+
 }

@@ -31,6 +31,7 @@ public class MazeGenerator {
         MG.run(mazeXLength, mazeYLength, filePath);
     }
 
+
     private void run(int inX, int inY, Path fileName) {
         Maze m = new Maze(inX, inY);
         ArrayList<Coordinate2D> path = this.generatePath(m);
@@ -49,6 +50,7 @@ public class MazeGenerator {
             System.out.println(e);
         }
     }
+
 
     private void printMazeWalls(Maze m) {
         for (int y = 0; y < m.numOfRows(); y++){
@@ -73,6 +75,7 @@ public class MazeGenerator {
         }
     }
 
+
     private void printMazeOpenness(Maze m) {
         for (int y = 0; y < m.numOfRows(); y++){
              for (int x = 0; x < m.numOfColumns(); x++) {
@@ -81,6 +84,7 @@ public class MazeGenerator {
             System.out.println("\n");
         }
     }
+
 
     private HashMap<Coordinate2D, ArrayList<Maze.Direction>> getCellTravelDirections(ArrayList<Coordinate2D> path, Maze m) {
         HashMap<Coordinate2D, ArrayList<Maze.Direction>> cellTravelDirections = new HashMap<>();
@@ -199,6 +203,7 @@ public class MazeGenerator {
         }
     }
 
+
     private ArrayList<Coordinate2D> generatePath(Maze m) {
         ArrayList<Coordinate2D> visitedCoords = new ArrayList<>();
         Stack<Coordinate2D> coordStack = new Stack<>();
@@ -238,7 +243,6 @@ public class MazeGenerator {
     }
 
 
-    // TODO(Yoshi): Factor out
     public static String centerString (int width, String s) {
         return String.format("%-" + width  + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
     }
@@ -251,4 +255,5 @@ public class MazeGenerator {
         Path path = Files.createFile(filePath);
         Files.writeString(path, m.toString());
     }
+
 }
