@@ -13,8 +13,14 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Stack;
 
-
+/**
+ * Class used to represent a maze solver using a DFS strategy
+ */
 public class MazeSolverDFS {
+    /**
+     * Entrypoint method
+     * @param args command line args
+     */
     public static void main(String[] args) {
         if (args.length != 1) {
             System.out.println("Invalid arguments, Example: java MazeSolverDFS example_maze.dat");
@@ -32,6 +38,10 @@ public class MazeSolverDFS {
     }
 
 
+    /**
+     * Runs the solver
+     * @param p path to the maze data file
+     */
     private void run(Path p) {
         Maze m;
         // Try to generate a maze from file, return if file invalid
@@ -50,6 +60,12 @@ public class MazeSolverDFS {
     }
 
 
+    /**
+     * prints a summary of the solve
+     * @param m maze instance
+     * @param solvePath path the solve took
+     * @param solveTime time the solve took
+     */
     private void printSummary(Maze m, ArrayList<Coordinate2D> solvePath, long solveTime) {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
@@ -66,6 +82,11 @@ public class MazeSolverDFS {
     }
 
 
+    /**
+     * Solves the maze by generating a path using DFS
+     * @param m maze instance
+     * @return list of coordinates representing the steps the maze took
+     */
     private ArrayList<Coordinate2D> solveMazePath(Maze m) {
         ArrayList<Coordinate2D> visitedCoords = new ArrayList<>();
         Stack<Coordinate2D> coordStack = new Stack<>();
@@ -121,6 +142,12 @@ public class MazeSolverDFS {
     }
 
 
+    /**
+     * Generates a maze instance from a file
+     * @param p path to the file
+     * @return maze instance
+     * @throws Exception if file path, or file itself invalid
+     */
     private static Maze fileToMaze(Path p) throws Exception {
         Scanner inputStream = new Scanner(new File(String.valueOf(p.toAbsolutePath())));
         Maze m;

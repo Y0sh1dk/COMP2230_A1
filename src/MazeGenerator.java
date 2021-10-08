@@ -11,7 +11,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * Class used to represent a maze generator
+ */
 public class MazeGenerator {
+    /**
+     * Entrypoint method
+     * @param args command line args
+     */
     public static void main(String[] args) {
         if (args.length != 3) {
             System.out.println("Invalid arguments, Example: java MazeGenerator 5 6 example_maze.dat");
@@ -32,6 +39,12 @@ public class MazeGenerator {
     }
 
 
+    /**
+     * Runs the generator
+     * @param inX width of maze
+     * @param inY height of maze
+     * @param fileName file to store maze in
+     */
     private void run(int inX, int inY, Path fileName) {
         Maze m = new Maze(inX, inY);
         ArrayList<Coordinate2D> path = this.generatePath(m);
@@ -52,6 +65,10 @@ public class MazeGenerator {
     }
 
 
+    /**
+     * Prints the walls of the maze
+     * @param m maze
+     */
     private void printMazeWalls(Maze m) {
         for (int y = 0; y < m.numOfRows(); y++){
             for (int x = 0; x < m.numOfColumns(); x++) {
@@ -76,6 +93,10 @@ public class MazeGenerator {
     }
 
 
+    /**
+     * Prints the openness of the maze
+     * @param m maze
+     */
     private void printMazeOpenness(Maze m) {
         for (int y = 0; y < m.numOfRows(); y++){
              for (int x = 0; x < m.numOfColumns(); x++) {
@@ -86,6 +107,12 @@ public class MazeGenerator {
     }
 
 
+    /**
+     * Get all the directions a list of coordinates can travel
+     * @param path list of coordinates
+     * @param m maze
+     * @return all directions all coordinates can travel
+     */
     private HashMap<Coordinate2D, ArrayList<Maze.Direction>> getCellTravelDirections(ArrayList<Coordinate2D> path, Maze m) {
         HashMap<Coordinate2D, ArrayList<Maze.Direction>> cellTravelDirections = new HashMap<>();
 
@@ -166,6 +193,11 @@ public class MazeGenerator {
     }
 
 
+    /**
+     * Update the walls of the maze
+     * @param path path traveled
+     * @param m maze
+     */
     private void updateMazeCells(ArrayList<Coordinate2D> path, Maze m) {
         HashMap<Coordinate2D, ArrayList<Maze.Direction>> cellTravelDirection = this.getCellTravelDirections(path, m);
 
@@ -191,6 +223,11 @@ public class MazeGenerator {
     }
 
 
+    /**
+     * Print the path taken
+     * @param path path taken
+     * @param m maze
+     */
     private void printPath(ArrayList<Coordinate2D> path, Maze m) {
         // Print the path
         for (int y = 0; y <= m.numOfRows(); y++) {
@@ -204,6 +241,11 @@ public class MazeGenerator {
     }
 
 
+    /**
+     * Randomlly generate a path in the maze
+     * @param m maze
+     * @return path
+     */
     private ArrayList<Coordinate2D> generatePath(Maze m) {
         ArrayList<Coordinate2D> visitedCoords = new ArrayList<>();
         Stack<Coordinate2D> coordStack = new Stack<>();
@@ -243,11 +285,23 @@ public class MazeGenerator {
     }
 
 
+    /**
+     * Center a string
+     * @param width width to center it in
+     * @param s string
+     * @return centered string :)
+     */
     public static String centerString (int width, String s) {
         return String.format("%-" + width  + "s", String.format("%" + (s.length() + (width - s.length()) / 2) + "s", s));
     }
 
 
+    /**
+     * Saves the maze instance to a file
+     * @param m maze
+     * @param filePath path of file
+     * @throws IOException if cannot create file or write too it.
+     */
     private void mazeToFile(Maze m, Path filePath) throws IOException {
         if (Files.exists(filePath)) {
             Files.delete(filePath);

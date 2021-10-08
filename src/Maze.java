@@ -8,12 +8,17 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Class used to represent a maze
+ */
 public class Maze {
     private Integer[][] cells;
     private Coordinate2D startCellCoord;
     private Coordinate2D finishCellCoord;
 
-
+    /**
+     * enum for directions :)
+     */
     enum Direction {
         UP,
         DOWN,
@@ -22,6 +27,11 @@ public class Maze {
     }
 
 
+    /**
+     * Maze constructor
+     * @param XLength width of maze
+     * @param YLength height of maze
+     */
     public Maze(int XLength, int YLength) {
         this.cells = new Integer[XLength][YLength];
         this.initialize();
@@ -29,7 +39,7 @@ public class Maze {
 
 
     /**
-     * Initialise all cells to null
+     * Initialize all cells to null
      */
     private void initialize() {
         for (Integer[] row: this.cells) {
@@ -38,6 +48,11 @@ public class Maze {
     }
 
 
+    /**
+     * Gets all valid neighbours of a provided coordinate
+     * @param inCoord coordinate to find neighbours of
+     * @return list of neighbours
+     */
     public ArrayList<Coordinate2D> getNeighbours(Coordinate2D inCoord) {
         ArrayList<Coordinate2D> neighbourCoords = new ArrayList<>();
 
@@ -53,6 +68,11 @@ public class Maze {
     }
 
 
+    /**
+     * Gets all neighbours that are visitable, taking into account walls
+     * @param inCoord coordinate to find neighbours of
+     * @return list of neighbours
+     */
     public ArrayList<Coordinate2D> getVisitableNeighbours(Coordinate2D inCoord) {
         ArrayList<Coordinate2D> visitableNeighbours = new ArrayList<>();
         // Get all valid coords around it
@@ -92,22 +112,44 @@ public class Maze {
     }
 
 
+    /**
+     * Sets the value of a cell
+     * @param inX cell x coord
+     * @param inY cell y coord
+     * @param inValue value to set
+     */
     public void setCellValue(int inX, int inY, int inValue) {
         this.cells[inX][inY] = inValue;
     }
 
 
+    /**
+     * Gets the value of a cell
+     * @param inX cell x coord
+     * @param inY cell y coord
+     * @return cell value
+     */
     public Integer getCellValue(int inX, int inY) {
         return this.cells[inX][inY];
     }
 
 
+    /**
+     * check if a coordinate is valid
+     * @param inCoord coordinate to check
+     * @return true if it is, else false
+     */
     private boolean isValidCoord(Coordinate2D inCoord) {
         return (inCoord.getX() < this.cells.length && inCoord.getX() >= 0) && (inCoord.getY() < this.cells[0].length && inCoord.getY() >= 0);
     }
 
 
-    // Direction to next coord
+    /**
+     * Direction to another coordinate
+     * @param coord reference coordinate
+     * @param nextCoord coordinate to check
+     * @return a direction
+     */
     public static Direction directionOfCell(Coordinate2D coord, Coordinate2D nextCoord) {
         // Up
         if (coord.getX() == nextCoord.getX() && coord.getY() > nextCoord.getY()) {
@@ -132,6 +174,10 @@ public class Maze {
     }
 
 
+    /**
+     * Overridden toString() method
+     * @return a string representation of instance
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -147,16 +193,32 @@ public class Maze {
     }
 
 
+    /**
+     * Converts a coordinate to a index
+     * @param coord coordinate to convert
+     * @return index
+     */
     public int coordToIndex(Coordinate2D coord) {
         return this.coordToIndex(coord.getX(), coord.getY());
     }
 
 
+    /**
+     * Converts a coordinate to a index
+     * @param inX x coord
+     * @param inY y coord
+     * @return index
+     */
     public int coordToIndex(int inX, int inY) {
         return ((inY * this.numOfColumns()) + inX) + 1;
     }
 
 
+    /**
+     * Converts a index to a coordinate
+     * @param inIndex index to convert
+     * @return coordinate
+     */
     public Coordinate2D indexToCoord(int inIndex) {
         int x = (inIndex - 1) % this.numOfColumns();
         int y = (inIndex - 1) / this.numOfColumns();
@@ -164,31 +226,55 @@ public class Maze {
     }
 
 
+    /**
+     * Return the number of rows of the maze
+     * @return
+     */
     public int numOfRows() {
         return this.cells[0].length;
     }
 
 
+    /**
+     * Return the number of columns of the maze
+     * @return
+     */
     public int numOfColumns() {
         return this.cells.length;
     }
 
 
+    /**
+     * Get coordinates of the start cell
+     * @return start cell
+     */
     public Coordinate2D getStartCellCoord() {
         return startCellCoord;
     }
 
 
+    /**
+     * Set the start cell
+     * @param startCellCoord start cell
+     */
     public void setStartCellCoord(Coordinate2D startCellCoord) {
         this.startCellCoord = startCellCoord;
     }
 
 
+    /**
+     * Get the finish cell
+     * @return the finish cell
+     */
     public Coordinate2D getFinishCellCoord() {
         return finishCellCoord;
     }
 
 
+    /**
+     * Set the finish cell
+     * @param finishCellCoord finish cell
+     */
     public void setFinishCellCoord(Coordinate2D finishCellCoord) {
         this.finishCellCoord = finishCellCoord;
     }
