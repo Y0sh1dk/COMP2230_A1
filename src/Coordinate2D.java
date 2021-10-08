@@ -9,8 +9,8 @@
  * Class used to represent a 2D coordinate
  */
 public class Coordinate2D {
-    private int X;
-    private int Y;
+    private final int X;
+    private final int Y;
 
     /**
      * Coordinate2D Constructor
@@ -64,10 +64,9 @@ public class Coordinate2D {
      */
     @Override
     public String toString() {
-        return "Coordinate2D{" +
-                "X=" + X +
-                ", Y=" + Y +
-                '}';
+        return  "(" + X +
+                ", " + Y +
+                ')';
     }
 
     /**
